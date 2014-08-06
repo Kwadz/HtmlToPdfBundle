@@ -1,0 +1,15 @@
+parameters:
+    jihel.plugin.html_to_pdf.generator.pdf.class: Jihel\Plugin\HtmlToPdfBundle\Generator\PdfGenerator
+
+services:
+    jihel.plugin.html_to_pdf.generator.pdf:
+        class: %jihel.plugin.html_to_pdf.generator.pdf.class%
+        arguments:
+            - '@templating'
+            - %jihel.plugin.html_to_pdf.commands%
+            - %jihel.plugin.html_to_pdf.constants%
+            - %jihel.plugin.html_to_pdf.commands.dpi%
+            - %jihel.plugin.html_to_pdf.tmp_folder%
+            - %jihel.plugin.html_to_pdf.tmp_prefix%
+            - %jihel.plugin.html_to_pdf.use_xvfb%
+            - %jihel.plugin.html_to_pdf.quiet_mode%

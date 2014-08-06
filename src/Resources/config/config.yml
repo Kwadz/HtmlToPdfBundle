@@ -1,0 +1,3 @@
+jihel_plugin_html_to_pdf:
+    constants:
+        - 'DIRECTORY_SEPARATOR'
