@@ -25,21 +25,21 @@ class RawGenerationCommand extends ContainerAwareCommand
     protected function configure()
     {
         $this
-            ->setName('jihel:plugin:generate-raw-pdf')
+            ->setName('jihel:pdf:generate-raw-pdf')
             ->setDescription('Generate a pdf from twig html template without any parameters')
             ->setDefinition(array(
                 new InputArgument('template', InputArgument::REQUIRED, 'Template name'),
                 new InputArgument('savePath', InputArgument::REQUIRED, 'Save file to'),
             ))
             ->setHelp(<<<EOT
-The <info>jihel:plugin:generate-raw-pdf</info> Generate a pdf from twig html template without any parameters.
+The <info>jihel:pdf:generate-raw-pdf</info> Generate a pdf from twig html template without any parameters.
 
 There is a test template that can be used:
 JihelPluginHtmlToPdfBundle::exemple.html.twig
 
 Give an absolute save path
 
-<comment>php app/console jihel:plugin:generate-raw-pdf</comment> [template] [savePath]
+<comment>php app/console jihel:pdf:generate-raw-pdf</comment> [template] [savePath]
 
 EOT
             );
