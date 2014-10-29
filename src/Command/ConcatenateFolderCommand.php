@@ -25,18 +25,18 @@ class ConcatenateFolderCommand extends ContainerAwareCommand
     protected function configure()
     {
         $this
-            ->setName('jihel:plugin:concatenate-folder')
+            ->setName('jihel:pdf:concatenate-folder')
             ->setDescription('Concatenate all pdf in a folder')
             ->setDefinition(array(
                 new InputArgument('folderPath', InputArgument::REQUIRED, 'Folder name'),
                 new InputArgument('savePath', InputArgument::REQUIRED, 'Save file to'),
             ))
             ->setHelp(<<<EOT
-The <info>jihel:plugin:concatenate-folder</info> Concatenate all pdf in the given folder.
+The <info>jihel:pdf:concatenate-folder</info> Concatenate all pdf in the given folder.
 
 Give an absolute save path
 
-<comment>php app/console jihel:plugin:concatenate-folder</comment> [folderPath] [savePath]
+<comment>php app/console jihel:pdf:concatenate-folder</comment> [folderPath] [savePath]
 
 EOT
             );
