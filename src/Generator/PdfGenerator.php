@@ -39,6 +39,29 @@ class PdfGenerator extends Bean\PdfGeneratorBean
     }
 
     /**
+     * Create a .pdf file from the given $template name with given $data parameters
+     *
+     * @param string $view
+     * @return \SplFileObject
+     */
+    public function createFromString($view)
+    {
+        // Add constants to data
+        // Create html
+        $tmpHTMLFile = $this->createTemporaryFile('html');
+        $tmpHTMLFile->fwrite($view);
+
+        // Create pdf
+        $tmpPDFFile = $this->createTemporaryFile('pdf');
+        $cmd = $this->buildGeneratePdfCommand($tmpHTMLFile, $tmpPDFFile);
+        $this->lastCreateCommandResult = shell_exec($cmd);
+
+        // Remove tmp html file
+        unlink($tmpHTMLFile->getRealPath());
+        return $tmpPDFFile;
+    }
+
+    /**
      * Concatenate the given pdf files.
      * If you provide a path a folder,
      * concatenate them by alphabetic order
