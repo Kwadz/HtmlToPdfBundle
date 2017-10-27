@@ -16,6 +16,9 @@ use Jihel\Plugin\HtmlToPdfBundle\Generator\Exception as GeneratorException;
  */
 abstract class PdfGeneratorBean
 {
+    const OPTION_PORTRAIT = 0;
+    const OPTION_LANDSCAPE = 1;
+
     /**
      * @var \Symfony\Bridge\Twig\TwigEngine
      */
@@ -207,9 +210,10 @@ abstract class PdfGeneratorBean
     /**
      * @param \SplFileObject $tmpHTMLFile
      * @param \SplFileObject $tmpPDFFile
+     * @param integer $options
      * @return string
      */
-    protected function buildGeneratePdfCommand(\SplFileObject $tmpHTMLFile, \SplFileObject $tmpPDFFile)
+    protected function buildGeneratePdfCommand(\SplFileObject $tmpHTMLFile, \SplFileObject $tmpPDFFile, $options = '')
     {
         $cmd = '';
         // Prepare xvfb
@@ -221,14 +225,16 @@ abstract class PdfGeneratorBean
         }
 
         // Add wkhtmltopdf
-        $cmd .= sprintf('%s --dpi %d %s ',
+        $cmd .= sprintf('%s --dpi %d %s %s',
             $this->getCommand('wkhtmltopdf'),
             $this->getDpi(),
-            $this->getArgs('wkhtmltopdf')
+            $this->getArgs('wkhtmltopdf'),
+            $this->buildOptions($options)
         );
 
         // Add file's path
-        $cmd .= sprintf('%s %s ',
+        $cmd = sprintf('%s %s %s ',
+            trim($cmd),
             $tmpHTMLFile->getRealPath(),
             $tmpPDFFile->getRealPath()
         );
@@ -239,6 +245,22 @@ abstract class PdfGeneratorBean
         }
 
         return $cmd;
+    }
+
+    /**
+     * Add all options as a string
+     *
+     * @param integer $options
+     * @return string
+     */
+    protected function buildOptions($options)
+    {
+        $out = [];
+        if ($options & self::OPTION_LANDSCAPE) {
+            $out[] = '-O landscape';
+        }
+
+        return implode(' ', $out);
     }
 
     /**

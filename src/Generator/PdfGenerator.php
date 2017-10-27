@@ -17,9 +17,10 @@ class PdfGenerator extends Bean\PdfGeneratorBean
      *
      * @param string $template
      * @param array $data
+     * @param integer $options
      * @return \SplFileObject
      */
-    public function create($template, array $data = array())
+    public function create($template, array $data = array(), $options = self::OPTION_PORTRAIT)
     {
         // Add constants to data
         $data = array_merge($data, $this->getConstants());
@@ -30,7 +31,7 @@ class PdfGenerator extends Bean\PdfGeneratorBean
 
         // Create pdf
         $tmpPDFFile = $this->createTemporaryFile('pdf');
-        $cmd = $this->buildGeneratePdfCommand($tmpHTMLFile, $tmpPDFFile);
+        $cmd = $this->buildGeneratePdfCommand($tmpHTMLFile, $tmpPDFFile, $options);
         $this->lastCreateCommandResult = shell_exec($cmd);
 
         // Remove tmp html file
@@ -42,9 +43,10 @@ class PdfGenerator extends Bean\PdfGeneratorBean
      * Create a .pdf file from the given $template name with given $data parameters
      *
      * @param string $view
+     * @param integer $options
      * @return \SplFileObject
      */
-    public function createFromString($view)
+    public function createFromString($view, $options = self::OPTION_PORTRAIT)
     {
         // Add constants to data
         // Create html
@@ -53,7 +55,7 @@ class PdfGenerator extends Bean\PdfGeneratorBean
 
         // Create pdf
         $tmpPDFFile = $this->createTemporaryFile('pdf');
-        $cmd = $this->buildGeneratePdfCommand($tmpHTMLFile, $tmpPDFFile);
+        $cmd = $this->buildGeneratePdfCommand($tmpHTMLFile, $tmpPDFFile, $options);
         $this->lastCreateCommandResult = shell_exec($cmd);
 
         // Remove tmp html file
