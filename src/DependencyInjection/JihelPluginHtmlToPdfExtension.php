@@ -34,10 +34,34 @@ class JihelPluginHtmlToPdfExtension extends Extension implements PrependExtensio
     {
         $configuration = new Configuration();
         $config = $this->processConfiguration($configuration, $configs);
-        $this->registerParameters($config, $container);
+        $this
+            ->registerConstants($config, $container)
+            ->registerParameters($config, $container)
+        ;
 
         $loader = new Loader\YamlFileLoader($container, new FileLocator(__DIR__.'/../Resources/config'));
         $loader->load('generator.yml');
+    }
+
+    /**
+     * Register only constant array
+     *
+     * @param array            $config
+     * @param ContainerBuilder $container
+     * @param string           $prefix
+     * @return $this
+     */
+    protected function registerConstants(array &$config, ContainerBuilder $container, $prefix = '')
+    {
+        $constants = [];
+        foreach ($config['constants'] as $constant) {
+            $constants[$constant] = constant($constant);
+        }
+
+        $container->setParameter('jihel.plugin.html_to_pdf.constants', $constants);
+        unset($config['constants']);
+
+        return $this;
     }
 
     /**
@@ -45,9 +69,9 @@ class JihelPluginHtmlToPdfExtension extends Extension implements PrependExtensio
      * with a dot as deep separator.
      * Arrays are still completely available from related key.
      *
-     * @param array $config
+     * @param array            $config
      * @param ContainerBuilder $container
-     * @param string $prefix
+     * @param string           $prefix
      * @return $this
      */
     protected function registerParameters(array $config, ContainerBuilder $container, $prefix = '')

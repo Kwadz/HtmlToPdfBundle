@@ -88,18 +88,12 @@ abstract class PdfGeneratorBean
     ) {
         $this->templating = $templating;
         $this->commands   = $commands;
+        $this->constants  = $constants;
         $this->dpi        = $dpi;
         $this->tmpFolder  = $tmpFolder;
         $this->tmpPrefix  = $tmpPrefix;
         $this->useXvfb    = $useXvfb;
         $this->quietMode  = $quietMode;
-
-        // Register constants
-        if (count($constants)) {
-            foreach($constants as $constant) {
-                $this->constants[] = constant($constant);
-            }
-        }
     }
 
     /**
