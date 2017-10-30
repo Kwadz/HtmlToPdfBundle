@@ -15,13 +15,16 @@ class PdfGenerator extends Bean\PdfGeneratorBean
     /**
      * Create a .pdf file from the given $template name with given $data parameters
      *
-     * @param string $template
-     * @param array $data
+     * @param string  $template
+     * @param array   $data
      * @param integer $options
      * @return \SplFileObject
      */
-    public function create($template, array $data = array(), $options = self::OPTION_PORTRAIT)
-    {
+    public function create(
+        $template,
+        array $data = [],
+        $options = self::OPTION_PORTRAIT | self::MARGIN_NONE
+    ) {
         // Add constants to data
         $data = array_merge($data, $this->getConstants());
 
@@ -36,17 +39,18 @@ class PdfGenerator extends Bean\PdfGeneratorBean
 
         // Remove tmp html file
         unlink($tmpHTMLFile->getRealPath());
+
         return $tmpPDFFile;
     }
 
     /**
      * Create a .pdf file from the given $template name with given $data parameters
      *
-     * @param string $view
+     * @param string  $view
      * @param integer $options
      * @return \SplFileObject
      */
-    public function createFromString($view, $options = self::OPTION_PORTRAIT)
+    public function createFromString($view, $options = self::OPTION_PORTRAIT | self::MARGIN_NONE)
     {
         // Add constants to data
         // Create html
@@ -60,6 +64,7 @@ class PdfGenerator extends Bean\PdfGeneratorBean
 
         // Remove tmp html file
         unlink($tmpHTMLFile->getRealPath());
+
         return $tmpPDFFile;
     }
 
@@ -69,7 +74,7 @@ class PdfGenerator extends Bean\PdfGeneratorBean
      * concatenate them by alphabetic order
      *
      * @param \SplFileObject[]|string $files
-     * @param bool $unlink
+     * @param bool                    $unlink
      * @return \SplFileObject
      * @throws Exception\NotASplFileObjectException
      */
@@ -80,7 +85,7 @@ class PdfGenerator extends Bean\PdfGeneratorBean
                 // iterate to get all pdf files, and create an array of \SplFileObject
                 /** @var \DirectoryIterator[]|\DirectoryIterator $iterator */
                 $iterator = new \DirectoryIterator($files);
-                $files = array();
+                $files = [];
                 foreach ($iterator as $file) {
                     if (!$file->isDot() && !$file->isDir() && $file->getExtension() == 'pdf') {
                         $files[$file->getRealPath()] = new \SplFileObject($file->getRealPath());
@@ -90,7 +95,8 @@ class PdfGenerator extends Bean\PdfGeneratorBean
                 $files = array_values($files);
             } else {
                 throw new Exception\NotASplFileObjectException(sprintf(
-                    'Can\'t find any files in folder "%s"', $files
+                    'Can\'t find any files in folder "%s"',
+                    $files
                 ));
             }
         }

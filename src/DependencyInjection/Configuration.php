@@ -33,7 +33,6 @@ class Configuration implements ConfigurationInterface
                     ->children()
                         ->integerNode('dpi')->defaultValue(150)->cannotBeEmpty()->end()
                         ->scalarNode('wkhtmltopdf')->defaultValue('/usr/bin/wkhtmltopdf')->cannotBeEmpty()->end()
-                        ->scalarNode('wkhtmltopdf_args')->defaultValue('-T 0px -L 0px -B 0px -R 0px')->end()
                         ->scalarNode('xvfb')->defaultValue('/usr/bin/xvfb-run')->end()
                         ->scalarNode('xvfb_args')->defaultValue('--auto-servernum --server-args="-screen 0, 1920x1024x24"')->end()
                         ->scalarNode('concatenate')->defaultValue('/usr/bin/pdftk')->cannotBeEmpty()->end()

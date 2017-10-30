@@ -19,6 +19,9 @@ abstract class PdfGeneratorBean
     const OPTION_PORTRAIT = 0;
     const OPTION_LANDSCAPE = 1;
 
+    const MARGIN_NONE = 2;
+    const MARGIN_STANDARD = 4;
+
     /**
      * @var \Symfony\Bridge\Twig\TwigEngine
      */
@@ -32,7 +35,7 @@ abstract class PdfGeneratorBean
     /**
      * @var array
      */
-    protected $constants = array();
+    protected $constants = [];
 
     /**
      * @var int
@@ -71,13 +74,13 @@ abstract class PdfGeneratorBean
 
     /**
      * @param TwigEngine $templating
-     * @param array $commands
-     * @param array $constants
-     * @param int $dpi
-     * @param string $tmpFolder
-     * @param string $tmpPrefix
-     * @param bool $useXvfb
-     * @param bool $quietMode
+     * @param array      $commands
+     * @param array      $constants
+     * @param int        $dpi
+     * @param string     $tmpFolder
+     * @param string     $tmpPrefix
+     * @param bool       $useXvfb
+     * @param bool       $quietMode
      */
     public function __construct(
         TwigEngine $templating,
@@ -108,9 +111,11 @@ abstract class PdfGeneratorBean
     {
         if (!isset($this->commands[$command])) {
             throw new GeneratorException\CommandNotFoundException(sprintf(
-                'Command "%s" not found', $command
+                'Command "%s" not found',
+                $command
             ));
         }
+
         return $this->commands[$command];
     }
 
@@ -176,7 +181,7 @@ abstract class PdfGeneratorBean
      * @param array $data
      * @return string
      */
-    protected function render($template, array $data = array())
+    protected function render($template, array $data = [])
     {
         return $this->templating->render($template, $data);
     }
@@ -225,10 +230,9 @@ abstract class PdfGeneratorBean
         }
 
         // Add wkhtmltopdf
-        $cmd .= sprintf('%s --dpi %d %s %s',
+        $cmd .= sprintf('%s --dpi %d %s',
             $this->getCommand('wkhtmltopdf'),
             $this->getDpi(),
-            $this->getArgs('wkhtmltopdf'),
             $this->buildOptions($options)
         );
 
@@ -258,6 +262,12 @@ abstract class PdfGeneratorBean
         $out = [];
         if ($options & self::OPTION_LANDSCAPE) {
             $out[] = '-O landscape';
+        }
+        if ($options & self::MARGIN_NONE) {
+            $out[] = '-T 0px -L 0px -B 0px -R 0px';
+        }
+        if ($options & self::MARGIN_STANDARD) {
+            $out[] = '-T 100px -L 150px -B 100px -R 150px';
         }
 
         return implode(' ', $out);
